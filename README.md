@@ -33,16 +33,6 @@
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-最低配置要求（启用 DofSlim 优化后）：
-- CPU: 4 核
-- 内存: 8 GB
-- 硬盘: 50 GB 可用空间
-
-推荐配置：
-- CPU: 8 核
-- 内存: 12 GB+
-- 硬盘: 100 GB SSD
-
 > **[llnut/DofSlim](https://github.com/llnut/DofSlim) 内存优化说明：** 原版服务端 `df_bridge_r` 和 `df_channel_r` 静态分配 1000 个客户端对象，会浪费约 2.5GB 内存。本项目通过 DofSlim 技术动态缩减内存，可通过 `CLIENT_POOL_SIZE` 环境变量配置实际需要的客户端池大小，大幅降低内存占用。
 
 ## 🚀 部署方式
