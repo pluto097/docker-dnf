@@ -1,27 +1,27 @@
 
 services:
   dnf_mysql:
-    image: dnf_mysql:1.0
+    image: pluto06199/dnf-mysql:1.0
     container_name: dnf_mysql
     restart: unless-stopped
     ports:
-      - 3306:3306/tcp 
-      - 5505:5505/tcp           
+      - 3306:3306/tcp                 # MySQL端口
+      - 5505:5505/tcp                 # 登录网关端口
     environment:
       TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: root123    # 首次设置后再次修改需要进入容器修改密码，同时该密码也为game密码，root用户不可用于远程登录。
+      MYSQL_ROOT_PASSWORD: root123    # 首次设置后再次修改需要进入容器修改密码，同时该密码也为game密码，root用户不可用于远程登录。（自行修改）
       SERVER_IP: dnf_server
       MYSQL_IP: dnf_mysql
-      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 
+      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 # 登录网关AES密钥（自行修改）
     volumes:
       - ./mysql_data:/var/lib/mysql
     networks:
       - dnf_net
 
   dnf_server:
-    image: dnf_server:1.0
+    image: pluto06199/dnf-server:1.0
     container_name: dnf_server
-    shm_size: 10g
+    shm_size: 8g                
     restart: unless-stopped
     ports:
       - "22:22"           # 服务器SSH端口
@@ -43,9 +43,9 @@ services:
       #- ./server_data/dp2:/dp2
     environment:
       TZ: Asia/Shanghai
-      ROOT_PASSWORD: root123     # 服务器密码
-      PUBLIC_IP: 10.0.0.8       # 本机IP或公网IP
-      CLIENT_POOL_SIZE: 64   # 客户端池大小
+      ROOT_PASSWORD: root123     # 服务器密码（自行修改）
+      PUBLIC_IP: 10.0.0.8        # 本机IP（自行修改）
+      CLIENT_POOL_SIZE: 64       # 客户端池大小
       MYSQL_IP: dnf_mysql
     networks:
       - dnf_net
