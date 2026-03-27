@@ -11,7 +11,7 @@ COPY initdb/dnfsql_5.6.51_20250526.sql /tmp/
 
 # 复制llnut网关
 COPY llnutgate/ /root/
-COPY data/privatekey.pem /data/
+COPY data/privatekey.pem /tmp/
 # 只需要执行权限
 # RUN chmod +x /docker-entrypoint-initdb.d/*.sh
 

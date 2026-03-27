@@ -87,6 +87,18 @@ else
     echo "未设置 SERVER_IP 环境变量，跳过 GAME_SERVER_IP 配置"
 fi
 
+# 复制私钥到容器内
+cp /tmp/privatekey.pem /data/
+
+# 检查privatekey_data内是否有privatekey.pem，如果有就复制到/data
+if [ -f "/tmp/privatekey_data/privatekey.pem" ]; then
+    cp /tmp/privatekey_data/privatekey.pem /data/
+    echo "已从 privatekey_data 复制私钥到 /data"
+else
+    # 复制私钥到容器内
+    cp /tmp/privatekey.pem /data/
+fi
+
 # 启动网关
 cd /root/
 ./dnf-gate-server

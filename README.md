@@ -46,52 +46,55 @@
 编辑 `docker-compose.yml` 文件，根据需要修改环境变量：
 
 ```yaml
+
 services:
   dnf_mysql:
-    image: pluto06199/dnf-mysql:1.0
+    image: pluto06199/dnf-mysql:latest
     container_name: dnf_mysql
     restart: unless-stopped
     ports:
-      - 3306:3306/tcp 
-      - 5505:5505/tcp           
+      - 3306:3306/tcp                 # MySQL端口
+      - 5505:5505/tcp                 # 登录网关端口
     environment:
       TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: root123    # MySQL root 密码，game 用户密码也使用此值
+      MYSQL_ROOT_PASSWORD: root123    # 首次设置后再次修改需要进入容器修改密码，同时该密码也为game密码，root用户不可用于远程登录。（自行修改）
       SERVER_IP: dnf_server
       MYSQL_IP: dnf_mysql
-      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 #自行修改
+      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 # 登录网关AES密钥（自行修改）
     volumes:
       - ./mysql_data:/var/lib/mysql
+      - ./privatekey_data:/privatekey_data
     networks:
       - dnf_net
 
   dnf_server:
-    image: pluto06199/dnf-server:1.0
+    image: pluto06199/dnf-server:latest
     container_name: dnf_server
-    shm_size: 10g
+    shm_size: 8g                
     restart: unless-stopped
     ports:
       - "22:22"           # 服务器SSH端口
-      - 7001:7001/tcp      # df_channel_r
-      - 7001:7001/udp      # df_channel_r
-      - 7200:7200/tcp      # df_relay_r
-      - 7200:7200/udp      # df_relay_r
-      - 10011:10011/tcp    # df_game_r[ch.11]
-      - 11011:11011/udp    # df_game_r[ch.11]
-      #- 10052:10052/tcp    # df_game_r[ch.52] PVP
-      #- 11052:11052/udp    # df_game_r[ch.52] PVP
-      - 2311:2311/udp      # df_stun_r
-      - 2312:2312/udp      # df_stun_r
-      - 2313:2313/udp      # df_stun_r
+      - 7001:7001/tcp		  # df_channel_r
+      - 7001:7001/udp		  # df_channel_r
+      - 7200:7200/tcp		  # df_relay_r
+      - 7200:7200/udp		  # df_relay_r
+      - 10011:10011/tcp		# df_game_r[ch.11]
+      - 11011:11011/udp		# df_game_r[ch.11]
+      #- 10052:10052/tcp		# df_game_r[ch.52]PVP
+      #- 11052:11052/udp		# df_game_r[ch.52]PVP
+      - 2311:2311/udp		  # df_stun_r
+      - 2312:2312/udp	  	# df_stun_r
+      - 2313:2313/udp	  	# df_stun_r
     volumes:
       - ./server_data/root:/root
       - ./server_data/data:/data
       - ./server_data/log:/home/neople/game/log
+      #- ./server_data/dp2:/dp2
     environment:
       TZ: Asia/Shanghai
-      ROOT_PASSWORD: root123     # 服务器SSH root密码（自行修改）
-      PUBLIC_IP: 192.168.200.131       # 本机IP（自行修改）
-      CLIENT_POOL_SIZE: 64    # 客户端池大小（DofSlim优化）
+      ROOT_PASSWORD: root123     # 服务器密码（自行修改）
+      PUBLIC_IP: 10.0.0.8        # 本机IP（自行修改）
+      CLIENT_POOL_SIZE: 64       # 客户端池大小
       MYSQL_IP: dnf_mysql
     networks:
       - dnf_net
