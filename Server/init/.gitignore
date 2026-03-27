@@ -1,0 +1,3 @@
+Server/init/*.tar.gz
+Server/init/**/*.pvf
+*.log

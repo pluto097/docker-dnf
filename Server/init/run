@@ -1,0 +1,118 @@
+#!/bin/bash
+
+./stop
+sleep 2
+./stop
+sleep 2
+DNF_DIR=$(find /home -name db_info_tw.*|rev|cut -f4- -d/|rev)
+
+cd ${DNF_DIR}/stun
+chmod 777 *
+rm -f  ${DNF_DIR}/stun/pid/*.pid
+rm -rf ${DNF_DIR}/stun/log/*.*
+./df_stun_r start &
+
+cd ${DNF_DIR}/monitor
+chmod 777 *
+rm -f  ${DNF_DIR}/monitor/pid/*.pid
+rm -rf  ${DNF_DIR}/monitor/log/*.*
+./df_monitor_r mnt_siroco start &
+
+cd ${DNF_DIR}/manager
+chmod 777 *
+rm -f  ${DNF_DIR}/manager/pid/*.pid
+rm -rf  ${DNF_DIR}/manager/log/*.*
+./df_manager_r manager start &
+
+cd ${DNF_DIR}/relay
+chmod 777 *
+rm -f  ${DNF_DIR}/relay/pid/*.pid
+rm -rf  ${DNF_DIR}/relay/log/*.*
+./df_relay_r relay_200 start &
+
+cd ${DNF_DIR}/bridge
+chmod 777 *
+rm -f  ${DNF_DIR}/bridge/pid/*.pid
+rm -rf  ${DNF_DIR}/bridge/log/*.*
+LD_PRELOAD="./bridge_hook.so" ./df_bridge_r bridge start &
+
+cd ${DNF_DIR}/channel
+chmod 777 *
+rm -f  ${DNF_DIR}/channel/pid/*.pid
+rm -rf  ${DNF_DIR}/channel/log/*.*
+LD_PRELOAD="./channel_hook.so" ./df_channel_r channel start &
+
+cd ${DNF_DIR}/dbmw_guild
+chmod 777 *
+rm -f  ${DNF_DIR}/dbmw_guild/pid/*.pid
+rm -rf  ${DNF_DIR}/dbmw_guild/log/*.*
+./df_dbmw_r dbmw_gld_siroco start &
+
+cd ${DNF_DIR}/dbmw_mnt
+chmod 777 *
+rm -f  ${DNF_DIR}/dbmw_mnt/pid/*.pid
+rm -rf  ${DNF_DIR}/dbmw_mnt/log/*.*
+./df_dbmw_r dbmw_mnt_siroco start &
+
+cd ${DNF_DIR}/dbmw_stat
+chmod 777 *
+rm -f  ${DNF_DIR}/dbmw_stat/pid/*.pid
+rm -rf  ${DNF_DIR}/dbmw_stat/log/*.*
+./df_dbmw_r dbmw_stat_siroco start &
+
+cd ${DNF_DIR}/auction
+chmod 777 *
+rm -f  ${DNF_DIR}/auction/pid/*.pid
+rm -rf  ${DNF_DIR}/auction/log/*.*
+./df_auction_r ./cfg/auction_siroco.cfg start ./df_auction_r &
+
+cd ${DNF_DIR}/point
+chmod 777 *
+rm -f  ${DNF_DIR}/point/pid/*.pid
+rm -rf  ${DNF_DIR}/point/log/*.*
+./df_point_r ./cfg/point_siroco.cfg start df_point_r &
+
+cd ${DNF_DIR}/guild
+chmod 777 *
+rm -f  ${DNF_DIR}/guild/pid/*.pid
+rm -rf  ${DNF_DIR}/guild/log/*.*
+./df_guild_r gld_siroco start &
+./df_deamon &
+
+cd ${DNF_DIR}/statics
+chmod 777 *
+rm -f  ${DNF_DIR}/statics/pid/*.pid
+rm -rf  ${DNF_DIR}/statics/log/*.*
+./df_statics_r stat_siroco start &
+
+cd ${DNF_DIR}/coserver
+chmod 777 *
+rm -f  ${DNF_DIR}/coserver/pid/*.pid
+rm -rf  ${DNF_DIR}/coserver/log/*.*
+./df_coserver_r coserver start &
+
+cd ${DNF_DIR}/community
+chmod 777 *
+rm -f ${DNF_DIR}/community/pid/*.pid
+rm -rf ${DNF_DIR}/community/log/*.*
+./df_community_r community start &
+
+cd ${DNF_DIR}/secsvr/gunnersvr
+chmod 777 *
+rm -f ${DNF_DIR}/secsvr/gunnersvr/*.pid
+./gunnersvr -t30 -i1  &
+
+cd ${DNF_DIR}/secsvr/zergsvr
+chmod 777 *
+rm -f ${DNF_DIR}/secsvr/zergsvr/*.pid
+
+./secagent  &
+./zergsvr -t30 -i1  &
+
+cd ${DNF_DIR}/game
+chmod 777 *
+rm -rf ${DNF_DIR}/game/log/*
+sleep 5
+LD_PRELOAD="./frida.so" ./df_game_r siroco11 start &
+#sleep 2
+#LD_PRELOAD="./frida.so" ./df_game_r siroco52 start &
