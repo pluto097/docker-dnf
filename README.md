@@ -59,7 +59,7 @@ services:
       MYSQL_ROOT_PASSWORD: root123    # MySQL root 密码，game 用户密码也使用此值
       SERVER_IP: dnf_server
       MYSQL_IP: dnf_mysql
-      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 
+      GATE_AES_KEY: a1b2c3d4e5f6789012345678901234567890abcdef0123456789abcdef012345 #自行修改
     volumes:
       - ./mysql_data:/var/lib/mysql
     networks:
@@ -89,8 +89,8 @@ services:
       - ./server_data/log:/home/neople/game/log
     environment:
       TZ: Asia/Shanghai
-      ROOT_PASSWORD: root123     # 服务器SSH root密码
-      PUBLIC_IP: 10.0.0.8       # 本机IP或公网IP
+      ROOT_PASSWORD: root123     # 服务器SSH root密码（自行修改）
+      PUBLIC_IP: 192.168.200.131       # 本机IP（自行修改）
       CLIENT_POOL_SIZE: 64    # 客户端池大小（DofSlim优化）
       MYSQL_IP: dnf_mysql
     networks:
