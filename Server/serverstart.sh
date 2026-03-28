@@ -67,14 +67,24 @@ else
     exit 1
 fi
 
-# 检查 /data 目录中是否存在指定文件，如果存在则复制到 /home/neople/game 目录
-if [ -f "/data/df_game_r" ] && [ -f "/data/frida.js" ] && [ -f "/data/Script.pvf" ] && [ -f "/data/publickey.pem" ]; then
-    echo "检测到 /data 目录中的文件，正在更新到 /home/neople/game/..."
-    cp /data/{df_game_r,frida.js,Script.pvf,publickey.pem} /home/neople/game/
-    echo "版本文件复制完成！"
-else
-    echo "/data 目录中未找到完整的版本文件，跳过更新"
-fi
+#检查/data目录中是否存在指定文件，如果存在则复制到/home/neople/game目录中
+TARGET="/home/neople/game"
+
+echo "开始更新版本文件..."
+
+for file in df_game_r frida.js Script.pvf publickey.pem; do
+    src="/data/$file"
+    dst="$TARGET/$file"
+
+    if [ -f "$src" ]; then
+        echo "[OK] 复制 $file -> $TARGET"
+        cp "$src" "$dst"
+    else
+        echo "[SKIP] $file 不存在"
+    fi
+done
+
+echo "更新完成"
 
 # ---------- 检查 MySQL 连接并启动服务 ----------
 echo "正在检查 MySQL 连接..."
